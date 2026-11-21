@@ -1,4 +1,6 @@
-# MS2000 Instrumentation Suite - Unified Access & Documentation
+# MS2000 instrumentation design notes
+
+> These upstream design notes mix existing diagnostics with proposed integration. The example commands and C++ snippets below are design sketches. For flags supported by the current executable, run `ms2000_emulator --help` or see the [upstream build guide](../../docs/UPSTREAM.md).
 
 ## Overview
 

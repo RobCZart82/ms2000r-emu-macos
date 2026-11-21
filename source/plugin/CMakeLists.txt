@@ -77,37 +77,39 @@ elseif(APPLE)
     # MAC-4: the same on macOS - JUCE's bundle with its binary moved to Contents/Resources/MS2000R_engine and the
     # loader module as Contents/MacOS/MS2000R. Ad-hoc signed (the engine first: it is code outside Contents/MacOS).
     set(MS2K_VST3SDK ${JUCE_MODULES_DIR}/juce_audio_processors/format_types/VST3_SDK)
-    add_library(MS2000R_Shim MODULE shim/ms2k_vst3_shim.cpp
+    add_library(MS2000R_Shim_Loader MODULE shim/ms2k_vst3_shim.cpp
         ${MS2K_VST3SDK}/pluginterfaces/base/coreiids.cpp ${MS2K_VST3SDK}/pluginterfaces/base/funknown.cpp)
-    target_include_directories(MS2000R_Shim PRIVATE ${MS2K_VST3SDK})
-    target_compile_features(MS2000R_Shim PRIVATE cxx_std_17)
-    set_target_properties(MS2000R_Shim PROPERTIES CXX_VISIBILITY_PRESET hidden PREFIX "" SUFFIX "" OUTPUT_NAME MS2000R_shim)
-    target_link_libraries(MS2000R_Shim PRIVATE "-framework CoreFoundation")
-    add_dependencies(MS2000R_Shim MS2000R_VST_VST3)
+    target_include_directories(MS2000R_Shim_Loader PRIVATE ${MS2K_VST3SDK})
+    target_compile_features(MS2000R_Shim_Loader PRIVATE cxx_std_17)
+    set_target_properties(MS2000R_Shim_Loader PROPERTIES CXX_VISIBILITY_PRESET hidden PREFIX "" SUFFIX "" OUTPUT_NAME MS2000R_shim)
+    target_link_libraries(MS2000R_Shim_Loader PRIVATE "-framework CoreFoundation")
     set(MS2K_MULTI ${CMAKE_BINARY_DIR}/VST3_multi/MS2000R.vst3)
-    add_custom_command(TARGET MS2000R_Shim POST_BUILD
+    add_custom_target(MS2000R_Shim ALL
         COMMAND ${CMAKE_COMMAND} -E rm -rf ${MS2K_MULTI}
         COMMAND ${CMAKE_COMMAND} -E copy_directory $<TARGET_BUNDLE_DIR:MS2000R_VST_VST3> ${MS2K_MULTI}
         COMMAND ${CMAKE_COMMAND} -E rename ${MS2K_MULTI}/Contents/MacOS/MS2000R ${MS2K_MULTI}/Contents/Resources/MS2000R_engine
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MS2000R_Shim> ${MS2K_MULTI}/Contents/MacOS/MS2000R
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MS2000R_Shim_Loader> ${MS2K_MULTI}/Contents/MacOS/MS2000R
         COMMAND xattr -cr ${MS2K_MULTI}
         COMMAND codesign --force --sign - ${MS2K_MULTI}/Contents/Resources/MS2000R_engine
-        COMMAND codesign --force --sign - ${MS2K_MULTI})
+        COMMAND codesign --force --sign - ${MS2K_MULTI}
+        DEPENDS MS2000R_VST_VST3 MS2000R_Shim_Loader
+        VERBATIM)
 
     # ... and the Audio Unit the same way (shim/ms2k_au_shim.cpp). Result: build_vst/AU_multi/MS2000R.component
-    add_library(MS2000R_AUShim MODULE shim/ms2k_au_shim.cpp)
-    target_compile_features(MS2000R_AUShim PRIVATE cxx_std_17)
-    set_target_properties(MS2000R_AUShim PROPERTIES CXX_VISIBILITY_PRESET hidden PREFIX "" SUFFIX "" OUTPUT_NAME MS2000R_au_shim)
-    target_link_libraries(MS2000R_AUShim PRIVATE "-framework AudioToolbox" "-framework CoreFoundation")
-    add_dependencies(MS2000R_AUShim MS2000R_VST_AU)
+    add_library(MS2000R_AUShim_Loader MODULE shim/ms2k_au_shim.cpp)
+    target_compile_features(MS2000R_AUShim_Loader PRIVATE cxx_std_17)
+    set_target_properties(MS2000R_AUShim_Loader PROPERTIES CXX_VISIBILITY_PRESET hidden PREFIX "" SUFFIX "" OUTPUT_NAME MS2000R_au_shim)
+    target_link_libraries(MS2000R_AUShim_Loader PRIVATE "-framework AudioToolbox" "-framework CoreFoundation")
     set(MS2K_AU_MULTI ${CMAKE_BINARY_DIR}/AU_multi/MS2000R.component)
-    add_custom_command(TARGET MS2000R_AUShim POST_BUILD
+    add_custom_target(MS2000R_AUShim ALL
         COMMAND ${CMAKE_COMMAND} -E rm -rf ${MS2K_AU_MULTI}
         COMMAND ${CMAKE_COMMAND} -E copy_directory $<TARGET_BUNDLE_DIR:MS2000R_VST_AU> ${MS2K_AU_MULTI}
         COMMAND ${CMAKE_COMMAND} -E make_directory ${MS2K_AU_MULTI}/Contents/Resources
         COMMAND ${CMAKE_COMMAND} -E rename ${MS2K_AU_MULTI}/Contents/MacOS/MS2000R ${MS2K_AU_MULTI}/Contents/Resources/MS2000R_engine
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MS2000R_AUShim> ${MS2K_AU_MULTI}/Contents/MacOS/MS2000R
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MS2000R_AUShim_Loader> ${MS2K_AU_MULTI}/Contents/MacOS/MS2000R
         COMMAND xattr -cr ${MS2K_AU_MULTI}
         COMMAND codesign --force --sign - ${MS2K_AU_MULTI}/Contents/Resources/MS2000R_engine
-        COMMAND codesign --force --sign - ${MS2K_AU_MULTI})
+        COMMAND codesign --force --sign - ${MS2K_AU_MULTI}
+        DEPENDS MS2000R_VST_AU MS2000R_AUShim_Loader
+        VERBATIM)
 endif()

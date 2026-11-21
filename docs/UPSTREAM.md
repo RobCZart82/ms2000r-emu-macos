@@ -1,4 +1,6 @@
-# ms2000r-emu  (v0.9.10)
+# Upstream documentation (v0.9.10)
+
+This reference describes the original project. For the fork’s installers and current setup instructions, see the [macOS user guide](../README.md).
 
 A hardware-level emulator of the **KORG MS2000R** (rack version of the MS2000 analog-modeling synthesizer):
 the H8S/2350 main CPU runs the original firmware instruction by instruction, and the DSP56362 runs the
