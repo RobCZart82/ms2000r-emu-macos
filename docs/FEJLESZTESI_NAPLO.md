@@ -15,7 +15,7 @@ A `main` a saját macOS-változat kiadási ága. Minden új hibát, javítást �
 
 | Tétel | Állapot és következő lépés |
 | --- | --- |
-| Párhuzamos pluginbetöltés | Átvizsgálandó. Két hostfolyamat ideiglenes motorfájljainak ütközésére van javítási javaslat. Átvétel előtt reprodukció és többfolyamatos teszt kell. [Upstream #17](https://github.com/Tuth/ms2000r-emu/pull/17) |
+| Párhuzamos pluginbetöltés | Reprodukálva mindkét betöltőben. Másik élő folyamat motorfájlját is törölheti. A célzott javítás és a többfolyamatos regressziós próba v1.0.1 tétel. [Upstream #17](https://github.com/Tuth/ms2000r-emu/pull/17) |
 | DSP fordítói figyelmeztetés | Nyitott. A mellékelt DSP-kód negatív előjeles értékeket tol el bitenként. Javítás előtt a határértékeket és a hangkimenetet ellenőrizni kell. |
 | Kis audiopuffer | Nyitott. A helyi 44,1 kHz / 128 mintás teszten előfordult időtúllépés. Megismétlendő valódi DAW-ban. |
 | Telepítési és hostteszt | Nyitott. A natív Intel CI után is külön tétel a fizikai Intel Mac, az AU felismerése, a DAW-ból visszatöltött projekt és a teljes telepítési próba. |
@@ -29,7 +29,7 @@ A `main` a saját macOS-változat kiadási ága. Minden új hibát, javítást �
 
 ## v1.0.1 javítókiadás
 
-**Állapot:** tervezett. A fő javítás az inkrementális AU/VST3 csomagolás. Új hangfunkció nem része ennek a javítókiadásnak.
+**Állapot:** tervezett. A fő javítás az inkrementális AU/VST3 csomagolás és a párhuzamos betöltés hibája. A [részletes hibavizsgálat és átvételi terv](V1.0.1_ELLENORZES.md) tartalmazza a reprodukciót és a kiadási ellenőrzőlistát. Új hangfunkció nem része ennek a javítókiadásnak.
 
 1. A kiadási változtatások PR-en keresztül kerülnek a `main` ágra. A [macOS CI](../.github/workflows/macos.yml) külön ARM64 és Intel futást indít.
 2. Mindkét job fordítsa le a VST3-at, az AU-t és a standalone alkalmazást. Ellenőrizze a firmware nélküli VST3-betöltést, a csomagválasztókat, az architektúrát, a célmappákat és a bundle-aláírásokat. A próbacsomagokat a futás mellékletként tárolja.
