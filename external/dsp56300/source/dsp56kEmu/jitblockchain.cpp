@@ -1,7 +1,11 @@
 #include "jitblockchain.h"
 
 #include <atomic>
+#if defined(_MSC_VER)
 #include <intrin.h>
+#elif !defined(_ReturnAddress)
+#define _ReturnAddress() __builtin_return_address(0)
+#endif
 #include <thread>
 #include <functional>
 
