@@ -36,3 +36,9 @@ A `main` a saját macOS-változat kiadási ága. Minden új hibát, javítást �
 3. A két GitHub-ellenőrzés sikeres futása után legyenek kötelezőek a védett `main` ágon. A kiadás csak zöld, a kiadási commitra vonatkozó ellenőrzések után készülhet.
 4. A firmware helyi marad. Kiadás előtt mindkét architektúrán rögzítsük a ROM-os hangtesztet, a tesztkörnyezetet és a telepítés eredményét.
 5. Sikeres ellenőrzés után a `v1.0.1` taghez kerülhet a két telepítő, a hozzájuk tartozó forrás, a SHA-256 ellenőrzőösszegek és a kiadási megjegyzések.
+
+## Betöltőjavítás – v1.0.1
+
+Az [upstream #17](https://github.com/Tuth/ms2000r-emu/pull/17) macOS betöltőjavításának elvét alkalmaztuk az AU és VST3 formátumra (forráscommit: `0bb75c9450e737f5c8b3e0967a0a5d04d48b7a09`). A takarítás csak szabályos nevű, kilépett folyamathoz tartozó motorfájlt töröl. A motor első sikertelen megnyitása után ugyanaz a host újra próbálkozhat.
+
+ARM64-en mindkét betöltő megtartotta az élő folyamat és az idegen formátumú jelölőfájlokat, a már kilépett folyamat fájlját pedig törölte. Az AU factory ugyanabban a folyamatban sikeresen újrapróbálkozott a motorfájl visszaállítása után. A ROM-os hárompéldányos VST3 próba és az AU hangteszt lefutott. A végső Intel és ARM64 CI, az élő párhuzamos DAW-próba és a telepítési frissítés még ellenőrzendő.
