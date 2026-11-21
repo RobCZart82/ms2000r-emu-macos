@@ -2,13 +2,11 @@
 
 The fork’s `main` branch is the macOS development and release branch. Fork releases use independent version numbers starting at `v1.0.0`. Release notes record the upstream version and commit, imported changes, and validation results.
 
-## First release
+## Release status
 
-- [x] Preserve the tested Apple Silicon VST3 startup fix on the fork's main branch.
-- [ ] Build AU and VST3 for arm64 and x86_64. The current Intel target requires AVX2.
-- [ ] Fix incremental packaging so rebuilt engines are included in the VST3 and AU bundles.
-- [ ] Validate AU with auval and check ROM-backed MIDI audio, project recall, and multiple instances. Record whether x86_64 testing ran on Intel hardware or through Rosetta.
-- [ ] Publish separate arm64 and x86_64 PKG installers with selectable AU and VST3 components. Include corresponding buildable source and license notices. Users supply their ROMs separately. Record the signing and notarization status.
+- **Published in [v1.0.0](https://github.com/RobCZart82/ms2000r-emu-macos/releases/tag/v1.0.0)**: Apple Silicon startup fix and separate arm64 and x86_64 installers with VST3, AU and standalone options. The release includes source archives. Intel requires AVX2.
+- **Validated for v1.0.0**: ROM-backed audio in all three formats on Apple Silicon and under Rosetta for x86_64. See the release notes for the test methods and signing status.
+- **Next**: physical Intel hardware, AU discovery and validation with `auval`, DAW sessions, and installer end-to-end testing.
 
 ## Bringing in upstream and community changes
 
