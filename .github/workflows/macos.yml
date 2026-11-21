@@ -73,6 +73,8 @@ jobs:
               assert [entry.name for entry in payload.iterdir()] == [bundle]
               subprocess.run(["codesign", "--verify", "--deep", "--strict", str(payload / bundle)], check=True)
           PY
+      - name: Verify independent installer choices
+        run: python3 packaging/check-macos-choices.py "packages/MS2000R-macOS-v$PACKAGE_VERSION-$ARCH.pkg"
       - uses: actions/upload-artifact@v4
         with:
           name: macOS-pkg-${{ matrix.arch }}
