@@ -2,6 +2,8 @@
 
 The fork’s `main` branch is the macOS development and release branch. Fork releases use independent version numbers starting at `v1.0.0`. Release notes record the upstream version and commit, imported changes, and validation results.
 
+[Fejlesztési napló és v1.0.1 terv](FEJLESZTESI_NAPLO.md)
+
 ## Release status
 
 - **Published in [v1.0.0](https://github.com/RobCZart82/ms2000r-emu-macos/releases/tag/v1.0.0)**: Apple Silicon startup fix and separate arm64 and x86_64 installers with VST3, AU and standalone options. The release includes source archives. Intel requires AVX2.
