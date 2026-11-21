@@ -13,6 +13,7 @@
 // Copies stay loaded for the life of the process; stale copy files are removed on the next first load.
 #include <AudioToolbox/AudioToolbox.h>
 #include <dlfcn.h>
+#include "macos_engine_cleanup.h"
 #include <unistd.h>
 
 #include <cstdlib>
@@ -20,6 +21,7 @@
 #include <filesystem>
 #include <mutex>
 #include <string>
+#include <utility>
 
 namespace {
 
@@ -66,9 +68,7 @@ std::string tempDir()
 // copies left behind by an earlier process (a file still mapped by another process stays valid when unlinked)
 void cleanStaleCopies()
 {
-    std::error_code ec;
-    for (const auto& e : std::filesystem::directory_iterator(tempDir(), ec))
-        if (e.path().filename().string().rfind("engine_", 0) == 0) std::filesystem::remove(e.path(), ec);
+    ms2k::cleanExitedEngineCopies(tempDir());
 }
 
 bool loadCopy(EngineCopy& c)
@@ -90,8 +90,8 @@ EngineCopy* first()   // the engine file in the bundle
     cleanStaleCopies();
     EngineCopy c;
     c.path = enginePath();
-    g_copies.push_back(c);
-    if (!loadCopy(g_copies[0])) return nullptr;
+    if (!loadCopy(c)) return nullptr;
+    g_copies.push_back(std::move(c));
     return &g_copies[0];
 }
 

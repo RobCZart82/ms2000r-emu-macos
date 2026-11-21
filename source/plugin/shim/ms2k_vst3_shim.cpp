@@ -24,6 +24,7 @@
 #else
 #include <CoreFoundation/CoreFoundation.h>
 #include <dlfcn.h>
+#include "macos_engine_cleanup.h"
 #include <unistd.h>
 #include <filesystem>
 #endif
@@ -34,6 +35,7 @@
 #include <iterator>
 #include <mutex>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "pluginterfaces/base/ipluginbase.h"
@@ -157,9 +159,7 @@ PathStr tempDir()
 // copies left behind by a host that did not call bundleExit
 void cleanStaleCopies()
 {
-    std::error_code ec;
-    for (const auto& e : std::filesystem::directory_iterator(tempDir(), ec))
-        if (e.path().filename().string().rfind("engine_", 0) == 0) std::filesystem::remove(e.path(), ec);
+    ms2k::cleanExitedEngineCopies(tempDir());
 }
 
 void* symbol(ModuleHandle m, const char* name) { return dlsym(m, name); }
@@ -203,8 +203,8 @@ EngineCopy* first()   // the engine file in the bundle; it also answers every cl
     cleanStaleCopies();
     EngineCopy c;
     c.path = enginePath();
-    g_copies.push_back(c);
-    if (!loadCopy(g_copies[0])) return nullptr;
+    if (!loadCopy(c)) return nullptr;
+    g_copies.push_back(std::move(c));
     return &g_copies[0];
 }
 
