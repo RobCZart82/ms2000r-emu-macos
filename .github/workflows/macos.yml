@@ -37,10 +37,8 @@ jobs:
             -DCMAKE_OSX_ARCHITECTURES="$ARCH" -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
             -DMS2K_BUILD_VST3=ON -DMS2K_MAC_GUI=ON
           cmake --build build --target MS2000R_Shim MS2000R_AUShim MS2000R_app MS2000R_HostTest --parallel 3
-      - name: Load VST3 without firmware
-        run: |
-          build/source/plugin/MS2000R_HostTest_artefacts/Release/MS2000R_HostTest \
-            "$PWD/build/VST3_multi/MS2000R.vst3" "$RUNNER_TEMP/smoke.wav" 48000 512 1
+      - name: Check VST3 and AU loader regressions
+        run: bash packaging/check-macos-loaders.sh build
       - name: Assemble installer and verify its payload
         run: |
           ./packaging/macos-pkg.sh build "$ARCH" "$PACKAGE_VERSION" packages
