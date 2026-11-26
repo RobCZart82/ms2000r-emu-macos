@@ -42,3 +42,9 @@ A `main` a saját macOS-változat kiadási ága. Minden új hibát, javítást �
 Az [upstream #17](https://github.com/Tuth/ms2000r-emu/pull/17) macOS betöltőjavításának elvét alkalmaztuk az AU és VST3 formátumra (forráscommit: `0bb75c9450e737f5c8b3e0967a0a5d04d48b7a09`). A takarítás csak szabályos nevű, kilépett folyamathoz tartozó motorfájlt töröl. A motor első sikertelen megnyitása után ugyanaz a host újra próbálkozhat.
 
 ARM64-en mindkét betöltő megtartotta az élő folyamat és az idegen formátumú jelölőfájlokat, a már kilépett folyamat fájlját pedig törölte. Az AU factory ugyanabban a folyamatban sikeresen újrapróbálkozott a motorfájl visszaállítása után. A ROM-os hárompéldányos VST3 próba és az AU hangteszt lefutott. A végső Intel és ARM64 CI, az élő párhuzamos DAW-próba és a telepítési frissítés még ellenőrzendő.
+
+## vcpkg-kompatibilitás – v1.0.1 (2026-11-26)
+
+Az [upstream #22 hibajelentés](https://github.com/Tuth/ms2000r-emu/issues/22) alapján reprodukáltuk, hogy a macOS CMake automatikusan megpróbálja betölteni a `VCPKG_ROOT` által megadott toolchaint. A javítás az automatikus kiválasztást Windows hostra korlátozza, az ImGui Win32/DX11 függőségeket pedig Windows platformra. A manifest verziója követi az upstream 0.9.10 alapot.
+
+A helyi macOS konfiguráció a javítás előtt hibázott, utána sikerült ugyanazzal a környezeti változóval. Az explicit CMake toolchain továbbra is használható. A GitHub Actions mindkét macOS buildje beállított `VCPKG_ROOT` mellett konfigurál, így ellenőrzi ezt a regressziót. Windows fordítás külön ellenőrzendő.
