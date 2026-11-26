@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 
-# Set vcpkg toolchain for ImGui support
-if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+# Automatically select vcpkg only on Windows hosts. The macOS GUI fetches its own dependencies.
+# An explicit CMAKE_TOOLCHAIN_FILE remains supported on every platform.
+if(CMAKE_HOST_WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VCPKG_ROOT})
         set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
     elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")

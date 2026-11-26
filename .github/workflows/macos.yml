@@ -33,7 +33,8 @@ jobs:
       - name: Build VST3, AU and standalone
         run: |
           test "$(uname -m)" = "$ARCH"
-          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+          # A developer may have VCPKG_ROOT set; macOS must ignore automatic vcpkg selection.
+          VCPKG_ROOT="$RUNNER_TEMP/unused-vcpkg" cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_OSX_ARCHITECTURES="$ARCH" -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
             -DMS2K_BUILD_VST3=ON -DMS2K_MAC_GUI=ON
           cmake --build build --target MS2000R_Shim MS2000R_AUShim MS2000R_app MS2000R_HostTest --parallel 3
